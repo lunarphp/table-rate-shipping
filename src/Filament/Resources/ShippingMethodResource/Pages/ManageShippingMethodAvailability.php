@@ -14,7 +14,7 @@ class ManageShippingMethodAvailability extends BaseManageRelatedRecords
     protected static string $resource = ShippingMethodResource::class;
 
     // We'll use a different relationship approach since we need multiple relationships
-    protected static ?string $relationship = null;
+    protected static ?string $relationship = '';
 
     public function getTitle(): string
     {
