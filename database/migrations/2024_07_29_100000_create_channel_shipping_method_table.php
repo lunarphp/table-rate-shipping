@@ -18,7 +18,6 @@ return new class extends Migration
             $table->foreignIdFor(ShippingMethod::class)->constrained(
                 $this->prefix . 'shipping_methods'
             );
-            $table->boolean('visible')->default(true)->index();
             $table->boolean('enabled')->default(true)->index();
             $table->timestamp('starts_at')->nullable()->index();
             $table->timestamp('ends_at')->nullable()->index();

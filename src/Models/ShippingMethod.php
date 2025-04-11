@@ -89,7 +89,6 @@ class ShippingMethod extends BaseModel implements Contracts\ShippingMethod
             \Lunar\Models\Channel::class,
             "{$prefix}channel_shipping_method"
         )->withPivot([
-            'visible',
             'enabled',
             'starts_at',
             'ends_at',

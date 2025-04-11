@@ -71,7 +71,6 @@ class ShippingServiceProvider extends ServiceProvider
                 ShippingMethod::class,
                 "{$prefix}channel_shipping_method"
             )->withPivot([
-                'visible',
                 'enabled',
                 'starts_at',
                 'ends_at',

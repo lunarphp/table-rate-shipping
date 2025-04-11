@@ -30,9 +30,8 @@ class ListShippingMethod extends BaseListRecords
                 );
                 $shippingMethod->customerGroups()->sync($customerGroups);
 
-                // Also sync channels
                 $channels = Channel::pluck('id')->mapWithKeys(
-                    fn($id) => [$id => ['visible' => true, 'enabled' => true, 'starts_at' => now()]]
+                    fn($id) => [$id => ['enabled' => true, 'starts_at' => now()]]
                 );
                 $shippingMethod->channels()->sync($channels);
             }),
