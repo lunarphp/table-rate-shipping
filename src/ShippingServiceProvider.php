@@ -23,7 +23,7 @@ class ShippingServiceProvider extends ServiceProvider
 {
     public function register()
     {
-        $this->mergeConfigFrom(__DIR__.'/../config/shipping-tables.php', 'lunar.shipping-tables');
+        $this->mergeConfigFrom(__DIR__ . '/../config/shipping-tables.php', 'lunar.shipping-tables');
     }
 
     public function boot(ShippingModifiers $shippingModifiers)
@@ -32,13 +32,13 @@ class ShippingServiceProvider extends ServiceProvider
             return;
         }
 
-        $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'lunarpanel.shipping');
+        $this->loadTranslationsFrom(__DIR__ . '/../resources/lang', 'lunarpanel.shipping');
 
         if (! config('lunar.database.disable_migrations', false)) {
-            $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
+            $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
         }
 
-        $this->loadViewsFrom(__DIR__.'/../resources/views', 'shipping');
+        $this->loadViewsFrom(__DIR__ . '/../resources/views', 'shipping');
 
         $shippingModifiers->add(
             ShippingModifier::class,
@@ -64,6 +64,20 @@ class ShippingServiceProvider extends ServiceProvider
             )->withTimestamps();
         });
 
+        \Lunar\Models\Channel::resolveRelationUsing('shippingMethods', function ($channel) {
+            $prefix = config('lunar.database.table_prefix');
+
+            return $channel->belongsToMany(
+                ShippingMethod::class,
+                "{$prefix}channel_shipping_method"
+            )->withPivot([
+                'visible',
+                'enabled',
+                'starts_at',
+                'ends_at',
+            ])->withTimestamps();
+        });
+
         Product::resolveRelationUsing('shippingExclusions', function ($product) {
             return $product->morphMany(ShippingExclusion::class, 'purchasable');
         });
@@ -73,7 +87,7 @@ class ShippingServiceProvider extends ServiceProvider
         });
 
         ModelManifest::addDirectory(
-            __DIR__.'/Models'
+            __DIR__ . '/Models'
         );
 
         Relation::morphMap([

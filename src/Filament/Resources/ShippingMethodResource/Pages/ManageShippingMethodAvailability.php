@@ -6,17 +6,18 @@ use Filament\Resources\RelationManagers\RelationGroup;
 use Filament\Support\Facades\FilamentIcon;
 use Lunar\Admin\Filament\Resources\ProductResource\RelationManagers\CustomerGroupRelationManager;
 use Lunar\Admin\Support\Pages\BaseManageRelatedRecords;
+use Lunar\Admin\Support\RelationManagers\ChannelRelationManager;
 use Lunar\Shipping\Filament\Resources\ShippingMethodResource;
 
 class ManageShippingMethodAvailability extends BaseManageRelatedRecords
 {
     protected static string $resource = ShippingMethodResource::class;
 
-    protected static string $relationship = 'customerGroups';
+    // We'll use a different relationship approach since we need multiple relationships
+    protected static ?string $relationship = null;
 
     public function getTitle(): string
     {
-
         return __('lunarpanel.shipping::shippingmethod.pages.availability.label');
     }
 
@@ -34,6 +35,7 @@ class ManageShippingMethodAvailability extends BaseManageRelatedRecords
     {
         return [
             RelationGroup::make('Availability', [
+                ChannelRelationManager::class,
                 CustomerGroupRelationManager::make([
                     'description' => __('lunarpanel.shipping::relationmanagers.shipping_methods.customer_groups.description'),
                 ]),

@@ -36,6 +36,7 @@ class ShippingMethod extends BaseModel implements Contracts\ShippingMethod
         static::deleting(function (self $shippingMethod) {
             DB::beginTransaction();
             $shippingMethod->customerGroups()->detach();
+            $shippingMethod->channels()->detach();
             $shippingMethod->shippingRates()->delete();
             DB::commit();
         });
@@ -69,6 +70,24 @@ class ShippingMethod extends BaseModel implements Contracts\ShippingMethod
         return $this->belongsToMany(
             CustomerGroup::class,
             "{$prefix}customer_group_shipping_method"
+        )->withPivot([
+            'visible',
+            'enabled',
+            'starts_at',
+            'ends_at',
+        ])->withTimestamps();
+    }
+
+    /**
+     * Return the channels relationship.
+     */
+    public function channels(): BelongsToMany
+    {
+        $prefix = config('lunar.database.table_prefix');
+
+        return $this->belongsToMany(
+            \Lunar\Models\Channel::class,
+            "{$prefix}channel_shipping_method"
         )->withPivot([
             'visible',
             'enabled',

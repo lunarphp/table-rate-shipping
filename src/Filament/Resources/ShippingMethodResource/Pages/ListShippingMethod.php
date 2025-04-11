@@ -6,6 +6,7 @@ use Filament\Actions;
 use Filament\Forms\Components\Group;
 use Lunar\Admin\Support\Pages\BaseListRecords;
 use Lunar\Models\CustomerGroup;
+use Lunar\Models\Channel;
 use Lunar\Shipping\Filament\Resources\ShippingMethodResource;
 use Lunar\Shipping\Models\ShippingMethod;
 
@@ -25,9 +26,15 @@ class ListShippingMethod extends BaseListRecords
                 ShippingMethodResource::getDescriptionFormComponent(),
             ])->after(function (ShippingMethod $shippingMethod) {
                 $customerGroups = CustomerGroup::pluck('id')->mapWithKeys(
-                    fn ($id) => [$id => ['visible' => true, 'enabled' => true, 'starts_at' => now()]]
+                    fn($id) => [$id => ['visible' => true, 'enabled' => true, 'starts_at' => now()]]
                 );
                 $shippingMethod->customerGroups()->sync($customerGroups);
+
+                // Also sync channels
+                $channels = Channel::pluck('id')->mapWithKeys(
+                    fn($id) => [$id => ['visible' => true, 'enabled' => true, 'starts_at' => now()]]
+                );
+                $shippingMethod->channels()->sync($channels);
             }),
         ];
     }
