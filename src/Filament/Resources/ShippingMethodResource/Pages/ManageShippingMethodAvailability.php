@@ -13,7 +13,7 @@ class ManageShippingMethodAvailability extends BaseManageRelatedRecords
 {
     protected static string $resource = ShippingMethodResource::class;
 
-    protected static ?string $relationship = 'channels';
+    protected static string $relationship = 'channels';
 
     public function getTitle(): string
     {
