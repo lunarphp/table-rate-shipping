@@ -13,7 +13,7 @@ class ManageShippingMethodAvailability extends BaseManageRelatedRecords
 {
     protected static string $resource = ShippingMethodResource::class;
 
-    protected static string $relationship = 'channels';
+    protected static string $relationship = 'customerGroups';
 
     public function getTitle(): string
     {
@@ -34,7 +34,9 @@ class ManageShippingMethodAvailability extends BaseManageRelatedRecords
     {
         return [
             RelationGroup::make('Availability', [
-                ChannelRelationManager::class,
+                ChannelRelationManager::make([
+                    'description' => __('lunarpanel.shipping::relationmanagers.shipping_methods.channels.description'),
+                ]),
                 CustomerGroupRelationManager::make([
                     'description' => __('lunarpanel.shipping::relationmanagers.shipping_methods.customer_groups.description'),
                 ]),
