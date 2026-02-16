@@ -23,7 +23,9 @@ class ShippingZoneResource extends BaseResource
 {
     protected static ?string $model = ShippingZone::class;
 
-    protected static ?int $navigationSort = 1;
+    protected static ?string $permission = 'shipping:manage';
+
+    protected $permission
 
     protected static SubNavigationPosition $subNavigationPosition = SubNavigationPosition::End;
 
