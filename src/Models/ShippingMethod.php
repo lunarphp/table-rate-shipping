@@ -9,15 +9,15 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\DB;
-use Lunar\Base\BaseModel;
-use Lunar\Base\Traits\HasCustomerGroups;
-use Lunar\Base\Traits\LogsActivity;
-use Lunar\Models\CustomerGroup;
+use Lunar\Core\Models\Base;
+use Lunar\Core\Models\Concerns\HasCustomerGroups;
+use Lunar\Core\Models\Concerns\LogsActivity;
+use Lunar\Core\Models\CustomerGroup;
 use Lunar\Shipping\Database\Factories\ShippingMethodFactory;
 use Lunar\Shipping\Facades\Shipping;
 use Lunar\Shipping\Interfaces\ShippingRateInterface;
 
-class ShippingMethod extends BaseModel implements Contracts\ShippingMethod
+class ShippingMethod extends Base
 {
     use HasCustomerGroups;
     use HasFactory;
@@ -55,7 +55,7 @@ class ShippingMethod extends BaseModel implements Contracts\ShippingMethod
 
     public function shippingRates(): HasMany
     {
-        return $this->hasMany(ShippingRate::modelClass());
+        return $this->hasMany(ShippingRate::class);
     }
 
     /**
@@ -127,7 +127,7 @@ class ShippingMethod extends BaseModel implements Contracts\ShippingMethod
         $prefix = config('lunar.database.table_prefix');
 
         return $this->belongsToMany(
-            CustomerGroup::modelClass(),
+            CustomerGroup::class,
             "{$prefix}customer_group_shipping_method"
         )->withPivot([
             'visible',

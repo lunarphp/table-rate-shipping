@@ -8,12 +8,13 @@ use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Components\Group;
 use Filament\Schemas\Components\Utilities\Get;
 use Lunar\Admin\Base\LunarPanelDiscountInterface;
-use Lunar\Base\ValueObjects\Cart\DiscountBreakdown;
-use Lunar\Base\ValueObjects\Cart\ShippingBreakdownItem;
-use Lunar\DataTypes\Price;
-use Lunar\DiscountTypes\AbstractDiscountType;
-use Lunar\Models\Contracts\Cart as CartContract;
-use Lunar\Models\Currency;
+use Lunar\Core\DataObjects\PriceValue;
+use Lunar\Core\DiscountTypes\AbstractDiscountType;
+use Lunar\Core\Facades\PriceCalculator;
+use Lunar\Core\Models\Cart;
+use Lunar\Core\Models\Currency;
+use Lunar\Core\ValueObjects\Cart\DiscountBreakdown;
+use Lunar\Core\ValueObjects\Cart\ShippingBreakdownItem;
 use Lunar\Shipping\Models\ShippingMethod;
 
 class ShippingDiscount extends AbstractDiscountType implements LunarPanelDiscountInterface
@@ -29,7 +30,7 @@ class ShippingDiscount extends AbstractDiscountType implements LunarPanelDiscoun
     /**
      * Apply the shipping discount to the cart.
      */
-    public function apply(CartContract $cart): CartContract
+    public function apply(Cart $cart): Cart
     {
         if (! $this->checkDiscountConditions($cart)) {
             return $cart;
@@ -81,8 +82,8 @@ class ShippingDiscount extends AbstractDiscountType implements LunarPanelDiscoun
 
             if ($type === 'percentage') {
                 $percentage = (float) ($rule['percentage'] ?? 0);
-                $discountedPrice = (int) round($item->price->value * (1 - $percentage / 100));
-                $discountedPrice = max(0, $discountedPrice);
+                $saving = PriceCalculator::percentage($item->price->value, $percentage / 100, $currency);
+                $discountedPrice = max(0, $item->price->value - $saving);
             } else {
                 if (! isset($rule['prices'][$currency->code])) {
                     $newTotal += $item->price->value;
@@ -95,7 +96,7 @@ class ShippingDiscount extends AbstractDiscountType implements LunarPanelDiscoun
             $breakdown->items->put($identifier, new ShippingBreakdownItem(
                 name: $item->name,
                 identifier: $identifier,
-                price: new Price($discountedPrice, $currency, 1),
+                price: new PriceValue($discountedPrice, $currency),
             ));
 
             $newTotal += $discountedPrice;
@@ -107,7 +108,7 @@ class ShippingDiscount extends AbstractDiscountType implements LunarPanelDiscoun
         }
 
         $cart->shippingBreakdown = $breakdown;
-        $cart->shippingSubTotal = new Price($newTotal, $currency, 1);
+        $cart->shippingSubTotal = new PriceValue($newTotal, $currency);
 
         if (! $cart->discounts) {
             $cart->discounts = collect();
@@ -119,7 +120,7 @@ class ShippingDiscount extends AbstractDiscountType implements LunarPanelDiscoun
 
         if ($savingAmount > 0) {
             $this->addDiscountBreakdown($cart, new DiscountBreakdown(
-                price: new Price($savingAmount, $currency, 1),
+                price: new PriceValue($savingAmount, $currency),
                 lines: collect(),
                 discount: $this->discount,
             ));
@@ -210,7 +211,7 @@ class ShippingDiscount extends AbstractDiscountType implements LunarPanelDiscoun
         foreach ($currencies as $currency) {
             $minPrice = $data['data']['min_prices'][$currency->code] ?? null;
             if ($minPrice !== null) {
-                $data['data']['min_prices'][$currency->code] = (int) round($minPrice * $currency->factor);
+                $data['data']['min_prices'][$currency->code] = PriceCalculator::toMinor($minPrice, $currency);
             }
         }
 
@@ -221,7 +222,7 @@ class ShippingDiscount extends AbstractDiscountType implements LunarPanelDiscoun
             foreach ($currencies as $currency) {
                 $price = $method['prices'][$currency->code] ?? null;
                 if ($price !== null) {
-                    $data['data']['methods'][$i]['prices'][$currency->code] = (int) round($price * $currency->factor);
+                    $data['data']['methods'][$i]['prices'][$currency->code] = PriceCalculator::toMinor($price, $currency);
                 }
             }
         }

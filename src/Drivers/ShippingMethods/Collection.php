@@ -2,9 +2,9 @@
 
 namespace Lunar\Shipping\Drivers\ShippingMethods;
 
-use Lunar\DataTypes\Price;
-use Lunar\DataTypes\ShippingOption;
-use Lunar\Models\Product;
+use Lunar\Core\DataObjects\PriceValue;
+use Lunar\Core\DataTypes\ShippingOption;
+use Lunar\Core\Models\Product;
 use Lunar\Shipping\DataTransferObjects\ShippingOptionRequest;
 use Lunar\Shipping\Interfaces\ShippingRateInterface;
 use Lunar\Shipping\Models\ShippingRate;
@@ -57,10 +57,9 @@ class Collection implements ShippingRateInterface
             name: $shippingMethod->name,
             description: $shippingMethod->description,
             identifier: $shippingRate->getIdentifier(),
-            price: new Price(
+            price: new PriceValue(
                 value: 0,
                 currency: $cart->currency,
-                unitQty: 1
             ),
             taxClass: $shippingRate->getTaxClass(),
             taxReference: $shippingRate->getTaxReference(),

@@ -5,10 +5,10 @@ namespace Lunar\Shipping\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
-use Lunar\Base\BaseModel;
+use Lunar\Core\Models\Base;
 use Lunar\Shipping\Factories\ShippingExclusionFactory;
 
-class ShippingExclusion extends BaseModel implements Contracts\ShippingExclusion
+class ShippingExclusion extends Base
 {
     use HasFactory;
 
@@ -35,7 +35,7 @@ class ShippingExclusion extends BaseModel implements Contracts\ShippingExclusion
      */
     public function list(): BelongsTo
     {
-        return $this->belongsTo(ShippingZone::modelClass());
+        return $this->belongsTo(ShippingZone::class);
     }
 
     /**

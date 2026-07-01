@@ -4,10 +4,10 @@ namespace Lunar\Shipping\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Lunar\Base\BaseModel;
+use Lunar\Core\Models\Base;
 use Lunar\Shipping\Factories\ShippingZonePostcodeFactory;
 
-class ShippingZonePostcode extends BaseModel implements Contracts\ShippingZonePostcode
+class ShippingZonePostcode extends Base
 {
     use HasFactory;
 
@@ -34,7 +34,7 @@ class ShippingZonePostcode extends BaseModel implements Contracts\ShippingZonePo
      */
     public function shippingZone(): BelongsTo
     {
-        return $this->belongsTo(ShippingZone::modelClass());
+        return $this->belongsTo(ShippingZone::class);
     }
 
     /**

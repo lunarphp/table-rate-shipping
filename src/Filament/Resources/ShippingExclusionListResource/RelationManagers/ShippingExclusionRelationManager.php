@@ -7,15 +7,16 @@ use Filament\Actions\CreateAction;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
-use Filament\Forms;
+use Filament\Forms\Components\MorphToSelect;
+use Filament\Forms\Components\MorphToSelect\Type;
+use Filament\Forms\Components\Select;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Schemas\Schema;
 use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Model;
-use Lunar\Models\Contracts\Product as ProductContract;
-use Lunar\Models\Product;
+use Lunar\Core\Models\Product;
 
 class ShippingExclusionRelationManager extends RelationManager
 {
@@ -32,17 +33,17 @@ class ShippingExclusionRelationManager extends RelationManager
     {
         return $schema
             ->components([
-                Forms\Components\MorphToSelect::make('purchasable')
+                MorphToSelect::make('purchasable')
                     ->types([
-                        Forms\Components\MorphToSelect\Type::make(Product::modelClass())
+                        Type::make(Product::class)
                             ->titleAttribute('name')
                             ->getOptionLabelUsing(
-                                fn (string $value): ?string => Product::modelClass()::find($value)?->translateAttribute('name')
+                                fn (string $value): ?string => Product::find($value)?->translate('name')
                             )
-                            ->getSearchResultsUsing(static function (Forms\Components\Select $component, string $search): array {
-                                return get_search_builder(Product::modelClass(), $search)
+                            ->getSearchResultsUsing(static function (Select $component, string $search): array {
+                                return get_search_builder(Product::class, $search)
                                     ->get()
-                                    ->mapWithKeys(fn (ProductContract $record): array => [$record->getKey() => $record->translateAttribute('name')])
+                                    ->mapWithKeys(fn (Product $record): array => [$record->getKey() => $record->translate('name')])
                                     ->all();
                             }),
                     ])
@@ -66,7 +67,7 @@ class ShippingExclusionRelationManager extends RelationManager
                     ->label(''),
                 TextColumn::make('purchasable')
                     ->formatStateUsing(
-                        fn ($state) => $state->attr('name')
+                        fn ($state) => $state->translate('name')
                     )
                     ->limit(50)
                     ->label(__('lunarpanel::product.table.name.label')),

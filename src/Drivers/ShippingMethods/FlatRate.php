@@ -2,9 +2,10 @@
 
 namespace Lunar\Shipping\Drivers\ShippingMethods;
 
-use Lunar\DataTypes\ShippingOption;
-use Lunar\Facades\Pricing;
-use Lunar\Models\Product;
+use Lunar\Core\DataObjects\PriceValue;
+use Lunar\Core\DataTypes\ShippingOption;
+use Lunar\Core\Facades\Pricing;
+use Lunar\Core\Models\Product;
 use Lunar\Shipping\DataTransferObjects\ShippingOptionRequest;
 use Lunar\Shipping\Interfaces\ShippingRateInterface;
 use Lunar\Shipping\Models\ShippingRate;
@@ -65,7 +66,7 @@ class FlatRate implements ShippingRateInterface
             name: $shippingMethod->name ?: $this->name(),
             description: $shippingMethod->description ?: $this->description(),
             identifier: $shippingRate->getIdentifier(),
-            price: $pricing->matched->price,
+            price: new PriceValue((int) $pricing->matched->price, $pricing->matched->currency),
             taxClass: $shippingRate->getTaxClass(),
             taxReference: $shippingRate->getTaxReference(),
             option: $shippingZone->name,
