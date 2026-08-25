@@ -39,7 +39,6 @@ return [
                     ],
                     'min_weight' => [
                         'label' => 'Min. Weight',
-                        'helper_text' => 'Enter weight in kilograms',
                     ],
                     'price' => [
                         'label' => 'Price',

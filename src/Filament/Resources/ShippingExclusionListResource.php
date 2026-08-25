@@ -2,16 +2,12 @@
 
 namespace Lunar\Shipping\Filament\Resources;
 
-use Filament\Actions\BulkActionGroup;
-use Filament\Actions\DeleteBulkAction;
-use Filament\Actions\EditAction;
 use Filament\Forms;
-use Filament\Pages\Enums\SubNavigationPosition;
-use Filament\Schemas\Components\Component;
-use Filament\Schemas\Components\Section;
-use Filament\Schemas\Schema;
+use Filament\Forms\Components\Component;
+use Filament\Forms\Form;
+use Filament\Pages\SubNavigationPosition;
 use Filament\Support\Facades\FilamentIcon;
-use Filament\Tables\Columns\TextColumn;
+use Filament\Tables;
 use Filament\Tables\Table;
 use Lunar\Admin\Support\Resources\BaseResource;
 use Lunar\Shipping\Filament\Resources\ShippingExclusionListResource\Pages;
@@ -26,7 +22,7 @@ class ShippingExclusionListResource extends BaseResource
 
     protected static ?int $navigationSort = 1;
 
-    protected static ?SubNavigationPosition $subNavigationPosition = SubNavigationPosition::End;
+    protected static SubNavigationPosition $subNavigationPosition = SubNavigationPosition::End;
 
     public static function getLabel(): string
     {
@@ -48,10 +44,10 @@ class ShippingExclusionListResource extends BaseResource
         return __('lunarpanel.shipping::plugin.navigation.group');
     }
 
-    public static function getDefaultForm(Schema $schema): Schema
+    public static function getDefaultForm(Form $form): Form
     {
-        return $schema->components([
-            Section::make()->schema(
+        return $form->schema([
+            Forms\Components\Section::make()->schema(
                 static::getMainFormComponents(),
             ),
         ]);
@@ -88,11 +84,11 @@ class ShippingExclusionListResource extends BaseResource
                 //
             ])
             ->actions([
-                EditAction::make(),
+                Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([
-                BulkActionGroup::make([
-                    DeleteBulkAction::make(),
+                Tables\Actions\BulkActionGroup::make([
+                    Tables\Actions\DeleteBulkAction::make(),
                 ]),
             ]);
     }
@@ -100,11 +96,11 @@ class ShippingExclusionListResource extends BaseResource
     public static function getTableColumns(): array
     {
         return [
-            TextColumn::make('name')
+            Tables\Columns\TextColumn::make('name')
                 ->label(
                     __('lunarpanel.shipping::shippingexclusionlist.table.name.label')
                 ),
-            TextColumn::make('exclusions_count')
+            Tables\Columns\TextColumn::make('exclusions_count')
                 ->label(
                     __('lunarpanel.shipping::shippingexclusionlist.table.exclusions_count.label')
                 )

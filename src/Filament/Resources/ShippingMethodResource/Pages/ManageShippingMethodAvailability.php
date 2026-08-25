@@ -7,7 +7,6 @@ use Filament\Support\Facades\FilamentIcon;
 use Lunar\Admin\Filament\Resources\ProductResource\RelationManagers\CustomerGroupRelationManager;
 use Lunar\Admin\Support\Pages\BaseManageRelatedRecords;
 use Lunar\Shipping\Filament\Resources\ShippingMethodResource;
-use Lunar\Shipping\Filament\Resources\ShippingMethodResource\Widgets\AvailabilityScheduleWidget;
 
 class ManageShippingMethodAvailability extends BaseManageRelatedRecords
 {
@@ -29,13 +28,6 @@ class ManageShippingMethodAvailability extends BaseManageRelatedRecords
     public static function getNavigationLabel(): string
     {
         return __('lunarpanel.shipping::shippingmethod.pages.availability.label');
-    }
-
-    protected function getDefaultHeaderWidgets(): array
-    {
-        return [
-            AvailabilityScheduleWidget::class,
-        ];
     }
 
     public function getRelationManagers(): array

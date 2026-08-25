@@ -100,7 +100,10 @@ class ShippingZoneResolver
             if ($this->postcodeLookup) {
                 $builder->orWhere(function ($qb) {
                     $qb->whereHas('postcodes', function ($query) {
-                        $query->whereIn('postcode', $this->postcodeLookup->getParts());
+                        $postcodeParts = (new PostcodeResolver)->getParts(
+                            $this->postcodeLookup->postcode
+                        );
+                        $query->whereIn('postcode', $postcodeParts);
                     })->where(function ($qb) {
                         $qb->whereHas('countries', function ($query) {
                             $query->where('country_id', $this->postcodeLookup->country->id);

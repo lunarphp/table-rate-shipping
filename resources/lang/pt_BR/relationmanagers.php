@@ -39,7 +39,6 @@ return [
                     ],
                     'min_weight' => [
                         'label' => 'Peso mín.',
-                        'helper_text' => 'Insira o peso em quilogramas',
                     ],
                     'price' => [
                         'label' => 'Preço',

@@ -13,26 +13,8 @@ return [
         'code' => [
             'label' => 'Code',
         ],
-        'schedule' => [
-            'label' => 'Availability Schedule',
-            'days' => [
-                'monday' => 'Monday',
-                'tuesday' => 'Tuesday',
-                'wednesday' => 'Wednesday',
-                'thursday' => 'Thursday',
-                'friday' => 'Friday',
-                'saturday' => 'Saturday',
-                'sunday' => 'Sunday',
-            ],
-            'from' => [
-                'label' => 'From',
-            ],
-            'to' => [
-                'label' => 'Until',
-                'validation' => [
-                    'after' => 'The until time must be after the from time.',
-                ],
-            ],
+        'cutoff' => [
+            'label' => 'Cutoff',
         ],
         'charge_by' => [
             'label' => 'Charge By',
@@ -50,16 +32,6 @@ return [
         ],
         'stock_available' => [
             'label' => 'Stock of all basket items must be available',
-        ],
-        'weight_unit' => [
-            'label' => 'Weight Unit',
-            'placeholder' => 'No weight restriction',
-        ],
-        'min_weight' => [
-            'label' => 'Minimum Weight',
-        ],
-        'max_weight' => [
-            'label' => 'Maximum Weight',
         ],
     ],
     'table' => [

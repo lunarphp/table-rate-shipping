@@ -39,7 +39,6 @@ return [
                     ],
                     'min_weight' => [
                         'label' => 'Min. súly',
-                        'helper_text' => 'Adja meg a súlyt kilogrammban',
                     ],
                     'price' => [
                         'label' => 'Ár',

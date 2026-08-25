@@ -3,7 +3,6 @@
 namespace Lunar\Shipping\Drivers\ShippingMethods;
 
 use Lunar\DataTypes\ShippingOption;
-use Lunar\Exceptions\MissingCurrencyPriceException;
 use Lunar\Facades\Pricing;
 use Lunar\Models\Product;
 use Lunar\Shipping\DataTransferObjects\ShippingOptionRequest;
@@ -71,21 +70,13 @@ class ShipBy implements ShippingRateInterface
         $tier = $subTotal;
 
         if ($chargeBy == 'weight') {
-            $tier = $cart->lines->sum(
-                fn ($line) => $line->purchasable->weight->to('weight.kg')->convert()->getValue() * $line->quantity
-            );
+            $tier = $cart->lines->sum(function ($line) {
+                return $line->purchasable->weight_value * $line->quantity;
+            });
         }
 
         // Do we have a suitable tier price?
-        try {
-            $pricing = Pricing::for($shippingRate)
-                ->currency($cart->currency)
-                ->customerGroups($customerGroups)
-                ->qty($tier)
-                ->get();
-        } catch (MissingCurrencyPriceException) {
-            return null;
-        }
+        $pricing = Pricing::for($shippingRate)->customerGroups($customerGroups)->qty($tier)->get();
 
         $prices = $pricing->priceBreaks;
 

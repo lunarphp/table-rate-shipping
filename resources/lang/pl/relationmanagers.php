@@ -39,7 +39,6 @@ return [
                     ],
                     'min_weight' => [
                         'label' => 'Min. Waga',
-                        'helper_text' => 'Podaj wagę w kilogramach',
                     ],
                     'price' => [
                         'label' => 'Cena',
